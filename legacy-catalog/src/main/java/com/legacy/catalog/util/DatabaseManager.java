@@ -12,10 +12,16 @@ public class DatabaseManager {
         System.out.println("[DB] Initializing database...");
         try {
             Class.forName("org.h2.Driver");
-            connection = DriverManager.getConnection(
-                    "jdbc:h2:mem:legacy;DB_CLOSE_DELAY=-1",
-                    "sa", "sa");
-            System.out.println("[DB] Connected to H2 in-memory database");
+            String url = System.getenv("DB_URL");
+            String user = System.getenv("DB_USER");
+            String pass = System.getenv("DB_PASSWORD");
+            if (url == null || url.isEmpty()) {
+                url = "jdbc:h2:mem:legacy;DB_CLOSE_DELAY=-1";
+                user = "sa";
+                pass = "sa";
+            }
+            connection = DriverManager.getConnection(url, user, pass);
+            System.out.println("[DB] Connected to database: " + url);
             createTable();
         } catch (Exception e) {
             System.out.println("[DB] CRITICAL ERROR: " + e.getMessage());
@@ -54,9 +60,15 @@ public class DatabaseManager {
             if (connection == null || connection.isClosed()) {
                 System.out.println("[DB] Reconnecting...");
                 Class.forName("org.h2.Driver");
-                connection = DriverManager.getConnection(
-                        "jdbc:h2:mem:legacy;DB_CLOSE_DELAY=-1",
-                        "sa", "sa");
+                String url = System.getenv("DB_URL");
+                String user = System.getenv("DB_USER");
+                String pass = System.getenv("DB_PASSWORD");
+                if (url == null || url.isEmpty()) {
+                    url = "jdbc:h2:mem:legacy;DB_CLOSE_DELAY=-1";
+                    user = "sa";
+                    pass = "sa";
+                }
+                connection = DriverManager.getConnection(url, user, pass);
             }
             return connection;
         } catch (Exception e) {

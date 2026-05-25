@@ -9,21 +9,20 @@
     <description>Legacy SOAP-based product catalog - DO NOT MODIFY</description>
 
     <servlet>
-        <servlet-name>AxisServlet</servlet-name>
-        <display-name>Apache Axis2 Servlet</display-name>
-        <servlet-class>org.apache.axis2.transport.http.AxisServlet</servlet-class>
+        <servlet-name>ProductCatalogServlet</servlet-name>
+        <servlet-class>com.legacy.catalog.servlet.SoapServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>AxisServlet</servlet-name>
-        <url-pattern>/services/*</url-pattern>
+        <servlet-name>ProductCatalogServlet</servlet-name>
+        <url-pattern>/services/ProductCatalogService</url-pattern>
     </servlet-mapping>
 
-    <mime-mapping>
-        <extension>wsdl</extension>
-        <mime-type>text/xml</mime-type>
-    </mime-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductCatalogServlet</servlet-name>
+        <url-pattern>/services/ProductCatalogService/*</url-pattern>
+    </servlet-mapping>
 
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
