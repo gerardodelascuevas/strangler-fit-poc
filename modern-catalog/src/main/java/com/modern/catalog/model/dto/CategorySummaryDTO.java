@@ -3,6 +3,7 @@ package com.modern.catalog.model.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Schema(description = "Category summary statistics")
 public class CategorySummaryDTO {
@@ -12,10 +13,12 @@ public class CategorySummaryDTO {
     private final BigDecimal averagePrice;
     private final Long totalStock;
 
-    public CategorySummaryDTO(String category, Long productCount, BigDecimal averagePrice, Long totalStock) {
+    public CategorySummaryDTO(String category, Long productCount, Double averagePrice, Long totalStock) {
         this.category = category;
         this.productCount = productCount;
-        this.averagePrice = averagePrice;
+        this.averagePrice = averagePrice != null
+                ? BigDecimal.valueOf(averagePrice).setScale(2, RoundingMode.HALF_UP)
+                : BigDecimal.ZERO;
         this.totalStock = totalStock;
     }
 

@@ -46,3 +46,7 @@ Desktop.ini
 .env
 .env.local
 *.env
+
+### Docker ###
+*.log
+h2-data/

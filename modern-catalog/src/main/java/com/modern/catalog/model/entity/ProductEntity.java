@@ -2,11 +2,8 @@ package com.modern.catalog.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -35,17 +32,6 @@ public class ProductEntity {
     @Min(value = 0, message = "Stock cannot be negative")
     @Column(nullable = false)
     private Integer stock;
-
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
-
-    @Version
-    private Integer version;
 
     public ProductEntity() {
     }
@@ -95,14 +81,6 @@ public class ProductEntity {
 
     public void setStock(Integer stock) {
         this.stock = stock;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
     }
 
     @Override

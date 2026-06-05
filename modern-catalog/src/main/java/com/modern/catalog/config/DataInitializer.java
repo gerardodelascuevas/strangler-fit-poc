@@ -23,12 +23,13 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (repository.count() > 0) {
-            log.info("Database already seeded, skipping initialization");
+        long existing = repository.count();
+        if (existing > 0) {
+            log.info("Database already has {} products (likely seeded by legacy service), skipping initialization", existing);
             return;
         }
 
-        log.info("Seeding database with initial product data");
+        log.info("Seeding database with initial product data (no legacy data found)");
 
         List<ProductEntity> products = List.of(
                 new ProductEntity("Laptop Pro", new BigDecimal("1299.99"), "ELECTRONICS", 15),

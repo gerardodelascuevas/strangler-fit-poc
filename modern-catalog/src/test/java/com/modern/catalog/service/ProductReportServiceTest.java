@@ -48,7 +48,7 @@ class ProductReportServiceTest {
                     new ProductEntity("Mug", BigDecimal.valueOf(12), "OTHER", 2)
             );
             var categorySummary = List.of(
-                    new CategorySummaryDTO("ELECTRONICS", 2L, BigDecimal.valueOf(45), 103L)
+                    new CategorySummaryDTO("ELECTRONICS", 2L, 45.0, 103L)
             );
 
             when(repository.findByStockLessThan(10)).thenReturn(lowStockProducts);
@@ -159,7 +159,7 @@ class ProductReportServiceTest {
         @DisplayName("Should return category summaries")
         void shouldReturnCategorySummaries() {
             var summaries = List.of(
-                    new CategorySummaryDTO("ELECTRONICS", 4L, BigDecimal.valueOf(450), 368L)
+                    new CategorySummaryDTO("ELECTRONICS", 4L, 450.0, 368L)
             );
 
             when(repository.getCategorySummaries()).thenReturn(summaries);

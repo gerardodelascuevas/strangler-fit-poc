@@ -1,0 +1,56 @@
+services:
+
+  h2-db:
+    image: oscarfonts/h2:latest
+    ports:
+      - "9092:9092"
+      - "8082:8082"
+    environment:
+      H2_OPTIONS: "-tcp -tcpAllowOthers -tcpPort 9092 -web -webAllowOthers -webPort 8082 -ifNotExists"
+    healthcheck:
+      test: ["CMD-SHELL", "java -cp /opt/h2/bin/h2*.jar org.h2.tools.Shell -url jdbc:h2:tcp://localhost:9092/./catalog -user sa -password sa -sql 'SELECT 1' || exit 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 15
+      start_period: 10s
+
+  legacy-catalog:
+    build:
+      context: ./legacy-catalog
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: "jdbc:h2:tcp://h2-db:9092/./catalog"
+      DB_USER: "sa"
+      DB_PASSWORD: "sa"
+    depends_on:
+      h2-db:
+        condition: service_healthy
+
+  modern-catalog:
+    build:
+      context: ./modern-catalog
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:h2:tcp://h2-db:9092/./catalog"
+      SPRING_DATASOURCE_USERNAME: "sa"
+      SPRING_DATASOURCE_PASSWORD: "sa"
+      SPRING_JPA_DDL_AUTO: "update"
+    depends_on:
+      h2-db:
+        condition: service_healthy
+      legacy-catalog:
+        condition: service_started
+
+  router:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./router/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - legacy-catalog
+      - modern-catalog
